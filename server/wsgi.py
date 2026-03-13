@@ -1,5 +1,14 @@
 import os
+from flask import Flask, send_from_directory
 
-from .gizmoapp_server import create_app
+app = Flask(__name__)
+root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-app = create_app(shell_variant=os.getenv("GIZMOAPP_SHELL"))
+@app.route('/')
+@app.route('/index.html')
+def index():
+    return send_from_directory(root, 'index.html')
+
+@app.route('/<path:filename>')
+def static_file(filename):
+    return send_from_directory(root, filename)
