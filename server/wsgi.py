@@ -3,14 +3,12 @@ from flask import Flask, send_from_directory
 
 app = Flask(__name__)
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-prefix = os.getenv('GIZMOAPP_URL_PREFIX', '').rstrip('/')
 
-def _index():
+@app.route('/')
+@app.route('/index.html')
+def index():
     return send_from_directory(root, 'index.html')
 
-def _static(filename):
+@app.route('/<path:filename>')
+def static_file(filename):
     return send_from_directory(root, filename)
-
-app.add_url_rule(prefix + '/',             'index',       _index)
-app.add_url_rule(prefix + '/index.html',   'index_html',  _index)
-app.add_url_rule(prefix + '/<path:filename>', 'static',   _static)
